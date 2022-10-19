@@ -5,6 +5,8 @@
 - [Installing requirements](#installing-requirements)
 - [Web scraping with rvest](#web-scraping-with-rvest)
 - [Web scraping with RSelenium](#web-scraping-with-rselenium)
+
+
 This tutorial covers the basics of web scraping with R. We’ll begin with the scraping of static pages and shift the focus to the techniques that can be used for scraping data from dynamic websites that use JavaScript to render the content.
 
 For a detailed explanation, see [this blog post](https://oxy.yt/1r8m). 
@@ -28,14 +30,14 @@ choco install r.studio
 
 ### Installing required libraries
 
-```r
+```R
 install.packages("rvest")
 install.packages("dplyr")
 ```
 
 ## Web scraping with rvest
 
-```r
+```R
 library(rvest)
 link = "https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes"
 page = read_html(link)
@@ -44,7 +46,7 @@ page = read_html(link)
 
 ### Parsing HTML Content
 
-```r
+```R
 page %>% html_elements(css="")
 page %>% html_elements(xpath="")
 ```
@@ -55,13 +57,13 @@ page %>% html_elements(xpath="")
 
 For above page, use the following:
 
-```r
+```R
 htmlElement <- page %>% html_element("table.sortable")
 ```
 
 ### Saving data to a data frame
 
-```r
+```R
 df <- html_table(htmlEl, header = FALSE)
 names(df) <- df[2,]
 df = df[-1:-2,]
@@ -69,13 +71,31 @@ df = df[-1:-2,]
 
 ### Exporting data frame to a CSV file
 
-```r
+```R
 write.csv(df, "iso_codes.csv")
 ```
 
+### Downloading Images
+
+```R
+page <- read_html(url)
+image_element <- page %>% html_element(".thumbborder")
+image_url <- image_element %>% html_attr("src")
+download.file(image_url, destfile = basename("paris.jpg"))
+```
+
+### Scrape Dynamic Pages with Rvest
+
+Find the API endpoint and use that as following:
+```R
+page<-read_html(GET(api_url, timeout(10)))
+jsontext <- page %>% html_element("p")  %>% html_text()
+```
+For a complete example, see [dynamic_rvest.R](src/dynamic_rvest.R).
+
 ## Web scraping with RSelenium
 
-```r
+```R
 install.package("RSelenium")
 library(RSelenium)
 
@@ -85,7 +105,7 @@ library(RSelenium)
 
 #### Method 1
 
-```r
+```R
 # Method 1
 rD <- rsDriver(browser="chrome", port=9515L, verbose=FALSE)
 remDr <- rD[["client"]]
@@ -98,7 +118,7 @@ remDr <- rD[["client"]]
 docker run -d -p 4445:4444 selenium/standalone-firefox
 ```
 
-```r
+```R
 remDr <- remoteDriver(
   remoteServerAddr = "localhost",
   port = 4445L,
@@ -109,13 +129,13 @@ remDr$open()
 
 ### Working with elements in Selenium
 
-```r
+```R
 remDr$navigate("https://books.toscrape.com/catalogue/category/books/science-fiction_16")
 ```
 
 ![](https://oxylabs.io/blog/images/2021/12/book_title.png)
 
-```r
+```R
 titleElements <- remDr$findElements(using = "xpath", "//article//img")
 titles <- sapply(titleElements, function(x){x$getElementAttribute("alt")[[1]]})
 
@@ -129,13 +149,13 @@ stocks <-  sapply(stockElements, function(x){x$getElementText()[[1]]})
 
 ### Creating a data frame
 
-```r
+```R
 df <- data.frame(titles, prices, stocks)
 ```
 
 #### Save CSV
 
-```r
+```R
 write.csv(df, "books.csv")
 ```
 
