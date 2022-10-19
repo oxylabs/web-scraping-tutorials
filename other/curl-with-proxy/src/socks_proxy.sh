@@ -1,0 +1,1 @@
+curl -x "socks5://user:pwd@127.0.0.1:1234" "http://httpbin.org/ip"
