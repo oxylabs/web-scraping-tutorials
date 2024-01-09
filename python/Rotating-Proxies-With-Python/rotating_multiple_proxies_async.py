@@ -3,7 +3,7 @@ import aiohttp
 import asyncio
 
 CSV_FILENAME = 'proxies.csv'
-URL_TO_CHECK = 'https://ip.oxylabs.io/ip'
+URL_TO_CHECK = 'https://ip.oxylabs.io'
 TIMEOUT_IN_SECONDS = 10
 
 
