@@ -43,7 +43,7 @@ Create a file with the `.py` extension with the following contents (or just copy
 ```python
 import requests
 
-response = requests.get('https://ip.oxylabs.io/ip')
+response = requests.get('https://ip.oxylabs.io/location')
 print(response.text)
 ```
 
@@ -52,9 +52,9 @@ Now, run it from a terminal
 ```bash
 $ python no_proxy.py
 
-128.90.50.100
+{"ip":"104.200.141.20","providers":{"dbip":{"country":"US","asn":"AS46562","org_name":"Performive LLC","city":"New York","zip_code":"","time_zone":"","meta":"\u003ca href='https://db-ip.com'\u003eIP Geolocation by DB-IP\u003c/a\u003e"},"ip2location":{"country":"US","asn":"","org_name":"","city":"New York City","zip_code":"10011","time_zone":"-05:00","meta":"This site or product includes IP2Location LITE data available from \u003ca href=\"https://lite.ip2location.com\"\u003ehttps://lite.ip2location.com\u003c/a\u003e."},"ipinfo":{"country":"US","asn":"AS46562","org_name":"Performive LLC","city":"","zip_code":"","time_zone":"","meta":"\u003cp\u003eIP address data powered by \u003ca href=\"https://ipinfo.io\" \u003eIPinfo\u003c/a\u003e\u003c/p\u003e"},"maxmind":{"country":"US","asn":"AS46562","org_name":"PERFORMIVE","city":"","zip_code":"","time_zone":"-06:00","meta":"This product includes GeoLite2 Data created by MaxMind, available from https://www.maxmind.com."}}}
 ```
-The output of this script will show your current IP address, which uniquely identifies you on the network. Instead of exposing it directly when requesting pages, we will use a proxy server.
+The output of this script will show your location data along with the current IP address, which uniquely identifies you on the network. Instead of exposing it directly when requesting pages, we will use a proxy server. You can also use the [https://ip.oxylabs.io ](https://ip.oxylabs.io) URL to retrieve just the IP address as a response.
 
 Let's start by using a single proxy.
 
@@ -95,7 +95,7 @@ TIMEOUT_IN_SECONDS = 10
 
 The requests module [needs to know](https://docs.python-requests.org/en/master/user/advanced/#proxies) when to actually use the proxy.
 For that, consider the website you are attempting to access. Does it use http or https?
-Since we're trying to access **https**://ip.oxylabs.io/ip, we can define this configuration as follows
+Since we're trying to access **https**://ip.oxylabs.io, we can define this configuration as follows
 ```python
 scheme_proxy_map = {
     'https': PROXY,
@@ -116,7 +116,7 @@ Finally, we make the request by calling `requests.get` and passing all the varia
 
 ```python
 try:
-    response = requests.get('https://ip.oxylabs.io/ip', proxies=scheme_proxy_map, timeout=TIMEOUT_IN_SECONDS)
+    response = requests.get('https://ip.oxylabs.io', proxies=scheme_proxy_map, timeout=TIMEOUT_IN_SECONDS)
 except (ProxyError, ReadTimeout, ConnectTimeout) as error:
         print('Unable to connect to the proxy: ', error)
 else:
@@ -179,7 +179,7 @@ with open(CSV_FILENAME) as open_file:
         
         # Access the website via proxy
         try:
-            response = requests.get('https://ip.oxylabs.io/ip', proxies=scheme_proxy_map, timeout=TIMEOUT_IN_SECONDS)
+            response = requests.get('https://ip.oxylabs.io', proxies=scheme_proxy_map, timeout=TIMEOUT_IN_SECONDS)
         except (ProxyError, ReadTimeout, ConnectTimeout) as error:
             pass
         else:
@@ -190,7 +190,7 @@ with open(CSV_FILENAME) as open_file:
 
 ```python
         try:
-            response = requests.get('https://ip.oxylabs.io/ip', proxies=scheme_proxy_map, timeout=TIMEOUT_IN_SECONDS)
+            response = requests.get('https://ip.oxylabs.io', proxies=scheme_proxy_map, timeout=TIMEOUT_IN_SECONDS)
         except (ProxyError, ReadTimeout, ConnectTimeout) as error:
             pass
         else:
@@ -222,7 +222,7 @@ Then, create a python file where you define:
 
 ```python
 CSV_FILENAME = 'proxies.csv'
-URL_TO_CHECK = 'https://ip.oxylabs.io/ip'
+URL_TO_CHECK = 'https://ip.oxylabs.io'
 TIMEOUT_IN_SECONDS = 10
 ```
 
