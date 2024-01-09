@@ -15,7 +15,7 @@ with open(CSV_FILENAME) as open_file:
 
         try:
             response = requests.get(
-                'https://ip.oxylabs.io/ip',
+                'https://ip.oxylabs.io',
                 proxies=scheme_proxy_map,
                 timeout=TIMEOUT_IN_SECONDS,
             )
