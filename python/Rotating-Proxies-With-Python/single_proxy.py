@@ -9,7 +9,7 @@ scheme_proxy_map = {
 }
 try:
     response = requests.get(
-        'https://ip.oxylabs.io/ip', proxies=scheme_proxy_map, timeout=TIMEOUT_IN_SECONDS
+        'https://ip.oxylabs.io', proxies=scheme_proxy_map, timeout=TIMEOUT_IN_SECONDS
     )
 except (ProxyError, ReadTimeout, ConnectTimeout) as error:
     print('Unable to connect to the proxy: ', error)
